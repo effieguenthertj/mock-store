@@ -1,0 +1,21 @@
+{
+  "name": "mock-store",
+  "version": "1.0.0",
+  "description": "Blank Shopify Theme represents a completely blank Shopify Theme Architecture for custom builds. All template files created with [Online Store 2.0 features](https://www.shopify.com/partners/blog/shopify-online-store) built-in and acts as a reference for building Shopify themes. Contains meta-tags snippet for og:* meta tags.",
+  "main": "index.js",
+  "scripts": {
+    "start": "shopify theme dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "vue": "^3.2.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.6",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.13"
+  }
+}
