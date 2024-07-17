@@ -1,0 +1,28 @@
+<div>
+  {% if section.settings.image %}
+    {% comment %} <img src="{{ section.settings.image | img_url: '1200x' }}" alt="Banner" class="w-full"> {% endcomment %}
+  {% else %}
+    <div class="text-center">
+      <img src="{{ 'Hero.png' | asset_url }}" alt="Hero" class="w-full" width=1200 height=200>
+    </div>
+  {% endif %}
+</div>
+
+
+{% schema %}
+  {
+    "name": "Banner",
+    "settings": [
+      {
+        "type": "image_picker",
+        "label": "Image",
+        "id": "image"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Banner"
+      }
+    ]
+  }
+{% endschema %}

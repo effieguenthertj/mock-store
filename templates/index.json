@@ -2,11 +2,15 @@
   "sections": {
     "main": {
       "type": "index-section",
-      "settings": {
-      }
+      "settings": {}
+    },
+    "banner": {
+      "type": "banner",
+      "settings": {},
     }
   },
   "order": [
+    "banner",
     "main"
   ]
 }
