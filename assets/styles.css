@@ -1589,6 +1589,9 @@ select {
 .-inset-1 {
   inset: -0.25rem;
 }
+.inset-0 {
+  inset: 0px;
+}
 .bottom-0 {
   bottom: 0px;
 }
@@ -1600,6 +1603,15 @@ select {
 }
 .top-0 {
   top: 0px;
+}
+.left-\[10\%\] {
+  left: 10%;
+}
+.top-\[40\%\] {
+  top: 40%;
+}
+.top-\[50\%\] {
+  top: 50%;
 }
 .isolate {
   isolation: isolate;
@@ -1659,8 +1671,18 @@ select {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .mt-2 {
   margin-top: 0.5rem;
+}
+.mt-10 {
+  margin-top: 2.5rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
 }
 .box-border {
   box-sizing: border-box;
@@ -2516,6 +2538,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(228 228 231 / var(--tw-bg-opacity));
 }
+.bg-sandyBrown {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 153 83 / var(--tw-bg-opacity));
+}
 .decoration-slice {
   -webkit-box-decoration-break: slice;
           box-decoration-break: slice;
@@ -2604,6 +2630,12 @@ select {
 .p-4 {
   padding: 1rem;
 }
+.p-10 {
+  padding: 2.5rem;
+}
+.p-3 {
+  padding: 0.75rem;
+}
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -2615,6 +2647,18 @@ select {
 .px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+}
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
 }
 .pl-6 {
   padding-left: 1.5rem;
@@ -2686,6 +2730,10 @@ select {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 .font-bold {
   font-weight: 700;

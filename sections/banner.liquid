@@ -7,7 +7,7 @@
       {% if shop.brand.logo %}
         <img src="{{ shop.brand.logo | image_url: '1200x' }}" alt="logo" class="" width="500" height="500">
       {% else %}
-        <img src="{{ 'Logo-1.png' | asset_url }}" alt="logo" class="absolute top-0 left-0 bottom-0 right-0 m-auto" width=300 height=300> 
+        <img src="{{ 'Logo-1.png' | asset_url }}" alt="logo" class="absolute inset-0 m-auto" width=300 height=300> 
       {% endif %}
     </div>
   {% endif %}

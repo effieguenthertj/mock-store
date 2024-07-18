@@ -7,10 +7,20 @@
     "banner": {
       "type": "banner",
       "settings": {},
+    },
+    "campaign-banner": {
+      "type": "campaign-banner",
+      "settings": {}
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {}
     }
   },
   "order": [
     "banner",
+    "campaign-banner",
+    "featured-products",
     "main"
   ]
 }

@@ -1,4 +1,23 @@
-<div>
+<div class="p-10 relative">
+
+  <div class="flex w-100 h-100">
+  {% if section.settings.image %}
+    <img src="{{ section.settings.image | image_url: '1200x' }}" alt="Campaign Banner" class="w-full" width=1200 height=400>
+  {% else %}
+    <img src="{{ 'Rectangle.png' | asset_url }}" alt="rectangle" class="w-full" width="1200" height="300">
+  {% endif %}
+  </div>
+
+  <div class="text-white absolute top-[40%] left-[10%]">
+    <p class="mb-4 text-4xl">
+      {{ section.settings.text }}
+    </p>
+    <button
+      class="bg-sandyBrown text-white py-3 px-10 rounded"
+    >
+      Shop Now
+    </button>
+  </div>
 
 </div>
 
@@ -10,6 +29,12 @@
         "type": "image_picker",
         "label": "Image",
         "id": "image"
+      },
+      {
+        "type": "text",
+        "label": "Text",
+        "id": "text",
+        "default": "Free your wardrobe"
       }
     ],
     "presets": [
