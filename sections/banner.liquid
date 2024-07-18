@@ -1,9 +1,14 @@
 <div>
   {% if section.settings.image %}
-    {% comment %} <img src="{{ section.settings.image | img_url: '1200x' }}" alt="Banner" class="w-full"> {% endcomment %}
+    <img src="{{ section.settings.image | image_url: '1200x' }}" alt="Banner" class="w-full" width=1200 height=400>
   {% else %}
-    <div class="text-center">
-      <img src="{{ 'Hero.png' | asset_url }}" alt="Hero" class="w-full" width=1200 height=200>
+    <div class="text-center relative w-100">
+      <img src="{{ 'Hero.png' | asset_url }}" alt="Hero" class="w-full" width=1200 height=400 />
+      {% if shop.brand.logo %}
+        <img src="{{ shop.brand.logo | image_url: '1200x' }}" alt="logo" class="" width="500" height="500">
+      {% else %}
+        <img src="{{ 'Logo-1.png' | asset_url }}" alt="logo" class="absolute top-0 left-0 bottom-0 right-0 m-auto" width=300 height=300> 
+      {% endif %}
     </div>
   {% endif %}
 </div>
