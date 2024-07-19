@@ -6,5 +6,23 @@
     "theme_author": "Oleksandr Ostrovskyi",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Promotion Settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "promotion_text",
+        "label": "Promotion Text",
+        "default": "Get 20% off your first order!"
+      },
+      {
+        "type": "checkbox",
+        "id": "promotion_enabled",
+        "label": "Enable Promotion",
+        "default": true
+      },
+    ]
   }
+  
 ]
