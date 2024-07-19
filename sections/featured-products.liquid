@@ -5,9 +5,11 @@
     {% assign first_collection = collections.first  %}
       {% if first_collection and first_collection.products.size > 0 %}
         {% assign products = first_collection.products %}
+        <div class="flex px-6 mb-10">
         {% for product in products limit:4 %}
           {% render 'product-card', product: product%}
         {% endfor %}
+        </div>
       {% endif %}
   {% endif %}
     

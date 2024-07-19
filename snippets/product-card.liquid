@@ -1,3 +1,8 @@
-<div>
-  <p>{{ product.title }}</p>
+<div class="px-4">
+  <a href="{{ product.url }}">
+    <img src="{{ product.featured_image | image_url }}" alt="{{ product.title }}" width=400 height=600 />
+    <p class="text-center mt-4 text-sandyBrown">
+      {{ product.price | money }}
+    </p>
+  </a>
 </div>

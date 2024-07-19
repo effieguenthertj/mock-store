@@ -27,11 +27,15 @@
   <body>
     <main role="main" tabindex="-1">
 
-      <div class="text-xl text-center p-4 bg-zinc-200">
+      <div class="text-xl text-center p-4 z-10 bg-zinc-200 border-b-[1px] border-zinc-400 fixed w-full">
         {{ shop.name }}
       </div>
 
-      {{ content_for_layout }}
+      <div class="min-h-screen">
+        {{ content_for_layout }}
+      </div>
+
+      <div class="bg-zinc-200 h-[100px] border-t-2 border-sandyBrown"></div>
     </main>
   </body>
 </html>
