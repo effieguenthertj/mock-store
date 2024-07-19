@@ -1,11 +1,27 @@
-<div>
-    Featured Products
+<div>  
+  {% if section.settings.selected_products.size > 0 %}
+
+  {% else %}
+    {% assign first_collection = collections.first  %}
+      {% if first_collection and first_collection.products.size > 0 %}
+        {% assign products = first_collection.products %}
+        {% for product in products limit:4 %}
+          {% render 'product-card', product: product%}
+        {% endfor %}
+      {% endif %}
+  {% endif %}
+    
 </div>
 
 {% schema %}
   {
     "name": "Featured Products",
-    "settings": [],
+    "settings": [{
+      "type": "product_list",
+      "label": "Products",
+      "id": "selected_products",
+      "limit": 4
+    }],
     "presets": [
       {
         "name": "Featured Products"
