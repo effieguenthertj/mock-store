@@ -1,8 +1,11 @@
 <div>  
-  {% if section.settings.selected_products.size > 0 %}
+  {% if section.settings.selected_products != blank %}
     <div class="flex px-6 mb-10">
-      {% for product in section.settings.selected_products limit:4 %}
-        {% render 'product-card', product: product%}
+      {% for product_handle in section.settings.selected_products %}
+        {% assign product = all_products[product_handle] %}
+        {% if product != blank %}
+          {% render 'product-card', product: product %}
+        {% endif %}
       {% endfor %}
     </div>
   {% else %}
