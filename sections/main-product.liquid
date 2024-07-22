@@ -1,0 +1,39 @@
+<div class="flex">
+  <div class="p-6">
+    {% if product.images.size > 0 %}
+      <div class="main-image-container">
+        <img 
+          id="main-image" 
+          src="{{ product.featured_image | img_url: 'large' }}" 
+          alt="{{ product.featured_image.alt | escape }}" 
+          class="w-full h-auto"
+          height=500
+          width=500
+        />
+      </div>
+      
+      <div class="thumbnail-container flex overflow-x-auto mt-4">
+        {% for image in product.images %}
+          <img 
+            src="{{ image | img_url: 'small' }}" 
+            alt="{{ image.alt | escape }}" 
+            class="thumbnail-image w-20 h-20 object-cover cursor-pointer {% if forloop.first %}border-2 border-blue-500{% endif %}"
+            data-full-img-url="{{ image | img_url: 'large' }}"
+            onclick="updateMainImage(this)"
+            height=500
+            width=500
+          >
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No images available for this product.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Main Product",
+    "settings": []
+  }
+{% endschema %}
