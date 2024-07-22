@@ -3,7 +3,7 @@
     <div class="flex px-6 mb-10">
       <p>Debug: Selected products: {{ section.settings.selected_products | join: ', ' }}</p>
       {% for product_handle in section.settings.selected_products %}
-        <p>Debug: Rendering product: {{ product.title }}</p>
+        <p>Debug: Rendering product: {{ product_handle.title }}</p>
         {% assign product = all_products[product_handle] %}
         {% if product != blank %}
           {% render 'product-card', product: product %}
