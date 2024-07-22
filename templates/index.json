@@ -25,9 +25,13 @@
         "text": "Free your wardrobe"
       }
     },
-    "featured_products_JU7cQQ": {
+    "featured_products_aPWx3i": {
       "type": "featured-products",
       "settings": {
+        "selected_products": [
+          "second-skin-luxe-rib-pajama-short",
+          "second-skin-luxe-rib-pajama-tee"
+        ]
       }
     }
   },
@@ -35,6 +39,6 @@
     "main",
     "banner_84BrnJ",
     "campaign_banner_kQnpMt",
-    "featured_products_JU7cQQ"
+    "featured_products_aPWx3i"
   ]
 }
