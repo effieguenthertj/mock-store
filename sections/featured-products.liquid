@@ -1,6 +1,7 @@
 <div>  
   {% if section.settings.selected_products != blank %}
     <div class="flex px-6 mb-10">
+      <p>Debug: Selected products: {{ section.settings.selected_products | join: ', ' }}</p>
       {% for product_handle in section.settings.selected_products %}
         {% assign product = all_products[product_handle] %}
         {% if product != blank %}
