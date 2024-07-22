@@ -1,10 +1,10 @@
-<div class="flex">
-  <div class="p-6">
+<div class="grid grid-cols-8">
+  <div class="p-6 col-span-4">
     {% if product.images.size > 0 %}
-      <div class="main-image-container">
+      <div class="">
         <img 
           id="main-image" 
-          src="{{ product.featured_image | img_url: 'large' }}" 
+          src="{{ product.featured_image | image_url }}" 
           alt="{{ product.featured_image.alt | escape }}" 
           class="w-full h-auto"
           height=500
@@ -15,7 +15,7 @@
       <div class="thumbnail-container flex overflow-x-auto mt-4">
         {% for image in product.images %}
           <img 
-            src="{{ image | img_url: 'small' }}" 
+            src="{{ image | image_url }}" 
             alt="{{ image.alt | escape }}" 
             class="thumbnail-image w-20 h-20 object-cover cursor-pointer {% if forloop.first %}border-2 border-blue-500{% endif %}"
             data-full-img-url="{{ image | img_url: 'large' }}"
@@ -28,6 +28,15 @@
     {% else %}
       <p>No images available for this product.</p>
     {% endif %}
+  </div>
+
+  <div class="p-6 col-span-4 mt-4">
+    <h2 class="text-3xl">{{ product.title }}</h2>
+    <p class="mt-8 text-sandyBrown">{{ product.price | money }}</p>
+    <button class="mt-8 text-cafeNoir py-4 px-8 border-2 border-cafeNoir rounded">
+      Add to Cart
+    </button>
+    <p class="mt-8">{{ product.description }}</p>
   </div>
 </div>
 
