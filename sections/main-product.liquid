@@ -1,30 +1,9 @@
-<div class="grid grid-cols-8">
+<div class="grid grid-cols-8" id="product">
   <div class="p-6 col-span-4">
     {% if product.images.size > 0 %}
-      <div class="">
-        <img 
-          id="main-image" 
-          src="{{ product.featured_image | image_url }}" 
-          alt="{{ product.featured_image.alt | escape }}" 
-          class="w-full h-auto"
-          height=500
-          width=500
-        />
-      </div>
-      
-      <div class="thumbnail-container flex overflow-x-auto mt-4">
-        {% for image in product.images %}
-          <img 
-            src="{{ image | image_url }}" 
-            alt="{{ image.alt | escape }}" 
-            class="thumbnail-image w-20 h-20 object-cover cursor-pointer {% if forloop.first %}border-2 border-blue-500{% endif %}"
-            data-full-img-url="{{ image | img_url: 'large' }}"
-            onclick="updateMainImage(this)"
-            height=500
-            width=500
-          >
-        {% endfor %}
-      </div>
+      {% comment %} <image-viewer :images="{{ product.images }}" /> {% endcomment %}
+       <image-viewer />
+      <hello-world msg="hello world" />
     {% else %}
       <p>No images available for this product.</p>
     {% endif %}
@@ -39,6 +18,10 @@
     <p class="mt-8">{{ product.description }}</p>
   </div>
 </div>
+
+<script>
+
+</script>
 
 {% schema %}
   {

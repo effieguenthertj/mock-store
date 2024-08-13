@@ -1,0 +1,8 @@
+{
+  "scripts/instances/HeaderApp.vue": {
+    "file": "HeaderApp.js",
+    "name": "HeaderApp",
+    "src": "scripts/instances/HeaderApp.vue",
+    "isEntry": true
+  }
+}
