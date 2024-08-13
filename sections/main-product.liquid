@@ -1,27 +1,38 @@
-<div class="grid grid-cols-8" id="product">
-  <div class="p-6 col-span-4">
-    {% if product.images.size > 0 %}
-      {% comment %} <image-viewer :images="{{ product.images }}" /> {% endcomment %}
-       <image-viewer />
-      <hello-world msg="hello world" />
-    {% else %}
-      <p>No images available for this product.</p>
-    {% endif %}
+<!-- This code imports the correct .js asset files which contain the vue setup ============== -->
+{% liquid
+  # theme-check-disable MissingTemplate
+  render 'vite-tag' with '/scripts/theme.js'
+  case template
+    when 'page.contact'
+      assign entry_point = template | append: '.js'
+    else
+      assign entry_point = request.page_type | append: '.js'
+  endcase
+  render 'vite-tag' with entry_point
+  # theme-check-enable MissingTemplate
+%}
+
+<vue-app data-vue="ProductPage">
+  <div class="grid grid-cols-8" id="product">
+    <div class="p-6 col-span-4">
+      {% if product.images.size > 0 %}
+        <image-viewer images="{{ product.images }}" />
+      {% else %}
+        <p>No images available for this product.</p>
+      {% endif %}
+    </div>
+
+    <div class="p-6 col-span-4 mt-4">
+      <h2 class="text-3xl">{{ product.title }}</h2>
+      <p class="mt-8 text-sandyBrown">{{ product.price | money }}</p>
+      <button class="mt-8 text-cafeNoir py-4 px-8 border-2 border-cafeNoir rounded">
+        Add to Cart
+      </button>
+      <p class="mt-8">{{ product.description }}</p>
+    </div>
   </div>
+</vue-app>
 
-  <div class="p-6 col-span-4 mt-4">
-    <h2 class="text-3xl">{{ product.title }}</h2>
-    <p class="mt-8 text-sandyBrown">{{ product.price | money }}</p>
-    <button class="mt-8 text-cafeNoir py-4 px-8 border-2 border-cafeNoir rounded">
-      Add to Cart
-    </button>
-    <p class="mt-8">{{ product.description }}</p>
-  </div>
-</div>
-
-<script>
-
-</script>
 
 {% schema %}
   {

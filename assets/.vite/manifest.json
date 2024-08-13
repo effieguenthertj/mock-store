@@ -4,5 +4,11 @@
     "name": "HeaderApp",
     "src": "scripts/instances/HeaderApp.vue",
     "isEntry": true
+  },
+  "scripts/instances/ProductPage.vue": {
+    "file": "ProductPage.js",
+    "name": "ProductPage",
+    "src": "scripts/instances/ProductPage.vue",
+    "isEntry": true
   }
 }
