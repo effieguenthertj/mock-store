@@ -13,7 +13,7 @@
 %}
 
 <vue-app data-vue="ProductPage">
-  <div class="grid grid-cols-8" id="product">
+  <div class="grid grid-cols-8 px-16 mb-10" id="product">
     <div class="p-6 col-span-4">
       {% if product.images.size > 0 %}
         <image-viewer product="{{ product.title | handle }}" /> 
@@ -29,6 +29,11 @@
         Add to Cart
       </button>
       <p class="mt-8">{{ product.description }}</p>
+    </div>
+
+    <div class="py-10 col-span-8 px-6">
+      <p class="text-xl mb-6">Reviews</p>
+      <review />
     </div>
   </div>
 </vue-app>

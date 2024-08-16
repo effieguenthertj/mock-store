@@ -9,7 +9,7 @@
           :key="`image_${index}`"
           :src="image"
           :alt="`${productData.title} image ${index}`"
-          class="mr-1 h-20 border-black"
+          class="mr-1 h-20 border-sandyBrown"
           :class="{ 'border-2': index === idx }"
         />
       </div>
