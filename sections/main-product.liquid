@@ -16,7 +16,7 @@
   <div class="grid grid-cols-8" id="product">
     <div class="p-6 col-span-4">
       {% if product.images.size > 0 %}
-        <image-viewer images="{{ product.images }}" />
+        <image-viewer product="{{ product.title | handle }}" /> 
       {% else %}
         <p>No images available for this product.</p>
       {% endif %}
