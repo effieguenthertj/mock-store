@@ -27,6 +27,7 @@ export default defineConfig({
             vue: 'https://unpkg.com/vue@3/dist/vue.esm-browser.js',
             '@instances': path.resolve(__dirname, './scripts/instances'),
             '@components': path.resolve(__dirname, './scripts/components'),
+            '@objects': path.resolve(__dirname, './scripts/objects'),
         },
         extensions: ['.vue', '.mjs', '.js', '.json'],
     },

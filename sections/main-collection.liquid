@@ -1,21 +1,36 @@
-<div class="py-8 px-20">
-  <h2 class="text-3xl my-4 ms-4">{{ collection.title }}</h2>
-  <div class="grid grid-cols-8">
-    {% for product in collection.products %}
-      <div class="col-span-2 my-4 mx-6">
-        <a href="{{ product.url }}">
+<!-- This code imports the correct .js asset files which contain the vue setup ============== -->
+{% liquid
+  # theme-check-disable MissingTemplate
+  render 'vite-tag' with '/scripts/theme.js'
+  case template
+    when 'page.contact'
+      assign entry_point = template | append: '.js'
+    else
+      assign entry_point = request.page_type | append: '.js'
+  endcase
+  render 'vite-tag' with entry_point
+  # theme-check-enable MissingTemplate
+%}
+
+<vue-app data-vue="CollectionPage">
+  <div class="py-8 px-20">
+    <h2 class="text-3xl my-4 ms-4">{{ collection.title }}</h2>
+    <filters />
+    <div class="grid grid-cols-8">
+      <div v-for="product in products" :key="product.id" class="col-span-2 my-4 mx-6">
+        <a :href="`/products/${product.handle}`">
           <img 
-            src="{{ product.featured_image | image_url }}" 
+            :src="product.images[0].src"
             height="100%" 
             width="100%" 
             class="w-100" 
           />
-          <p class="text-sm text-cafeNoir mt-4 pe-4">{{ product.title }}</p>
-          <p class="text-md text-cafeNoir mt-2 font-semibold">
-            {{ product.price | money }}
+          <p class="text-sm text-cafeNoir mt-4 pe-4">${ product.title }</p>
+          <p class="text-md text-cafeNoir font-semibold">
+            ${ product.price }
           </p>
         </a>
       </div>
-    {% endfor %}
+    </div>
   </div>
-</div>
+</vue-app>

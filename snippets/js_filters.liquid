@@ -1,0 +1,66 @@
+{%- liquid
+  if collection
+    assign gender_suffix = collection.metafields.custom.gender
+    assign context = collection.handle
+  elsif search
+    assign context = search.terms | handleize
+  endif
+
+  unless gender_suffix
+    if context contains 'women'
+      assign gender_suffix = '_women'
+    elsif context contains 'men'
+      assign gender_suffix = '_men'
+    else
+      assign gender_suffix = ''
+    endif
+  endunless
+-%}
+<script>
+  (function(theme) {
+    theme.filters = {
+      {%- for filter_data in shop.metaobjects['filter_renderer'].values -%}
+        {{ filter_data.system.handle | json }}: {
+          label: {{ filter_data.label.value | json }},
+          display_type: {{ filter_data.display_type.value | downcase | json }},
+          info_modal: {{ filter_data.info_modal.value.system.url | downcase | json }},
+          values: {
+            {%- for filter_value_data in filter_data.values.value -%}
+              {{ filter_value_data.system.handle | json }}: {
+                {%- if filter_data.display_type == 'Collection' -%}
+                  label: {{ filter_value_data.label.value | json }},
+                  description: {{ filter_value_data.description.value | json }},
+                  image: {%- liquid
+                    assign image_key = 'image' | append: gender_suffix
+                    assign image_url = filter_value_data[image_key].value | default: filter_value_data.image.value
+                    if image_url
+                      assign image_url = image_url | image_url: width: 240, height: 135, crop: 'center'
+                    endif
+                    echo image_url | json
+                  -%},
+                {%- elsif filter_data.display_type == 'Icon' -%}
+                  {% assign icon_key = 'icon' | append: gender_suffix %}
+                  {% assign icon = filter_value_data[icon_key].value | default: filter_value_data.icon.value %}
+                  label: {{ filter_value_data.label.value | json }},
+                  icon: {{ icon.icon.value | json }},
+                {%- elsif filter_data.display_type == 'Swatch' -%}
+                  label: {{ filter_value_data.label.value | json }},
+                  color: {{ filter_value_data.color.value | json }},
+                  image: {%- liquid
+                    assign image_url = filter_value_data.image.value
+                    if image_url
+                      assign image_url = image_url | image_url: width: 64, height: 64, crop: 'center'
+                    endif
+                    echo image_url | json
+                  -%},
+                {%- else -%}
+                  label: {{ filter_value_data.label.value | json }},
+                {%- endif -%}
+              },
+            {%- endfor -%}
+          },
+        },
+      {%- endfor -%}
+    };
+  })(window.theme = window.theme || {});
+</script>

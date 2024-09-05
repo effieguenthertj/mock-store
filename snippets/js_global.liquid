@@ -1,0 +1,709 @@
+{%- comment -%}
+  GLOBAL OBJECT
+
+  Creates a theme object of useful Liquid-accessible
+  objects to use in JavaScript and exports it as a
+  global variable.
+
+  Only Liquid objects should be stored on this object.
+
+  1. Shop
+  2. Template
+  3. Locales
+  4. Cart
+  5. Customer
+  6. Current Object
+  7. Routes
+  8. Settings
+  9. Localization
+{%- endcomment -%}
+
+<script>
+  (function(theme) {
+    // 1. Shop
+    theme.shop = {
+      address: {{ shop.address | json }},
+      currency: {{ shop.currency | json }},
+      moneyFormat: {{ shop.money_format | json }},
+      moneyWithCurrencyFormat: {{ shop.money_with_currency_format | json }},
+      domain: {{ shop.domain | json }},
+      locale: {{ request.locale.iso_code | json }},
+      name: {{ shop.name | json }},
+      url: {{ shop.url | json }},
+      subscriptionPolicyUrl: {{ shop.subscription_policy.url | json }},
+      permanentDomain: {{ shop.permanent_domain | json }},
+    };
+
+    // 2. Template
+    theme.template = {
+      name: {{ template.name | json }},
+      suffix: {{ template.suffix | json }}
+    };
+
+    // 3. Locales
+    theme.locales = {
+      {{ request.locale.iso_code | json }}: {
+        general: {
+          pagination: {
+            load_more: {{ 'general.pagination.load_more' | t | json }},
+            next: {{ 'general.pagination.next' | t | json }},
+            {% assign placeholder = '{total}' -%}
+            of_pages: {{ 'general.pagination.of_pages' | t: total: placeholder | json }},
+            page_label: {{ 'general.pagination.page_label' | t | json }},
+            previous: {{ 'general.pagination.previous' | t | json }},
+            viewing: {% liquid
+              assign count_placeholder = '{count}'
+              assign total_placeholder = '{total}'
+              echo 'general.pagination.viewing' | t: count: count_placeholder, total: total_placeholder | json
+            %},
+          },
+          newsletter_form: {
+            title: {{ 'general.newsletter_form.title' | t | json }},
+            email_placeholder: {{ 'general.newsletter_form.email_placeholder' | t | json }},
+            confirmation: {{ 'general.newsletter_form.confirmation' | t | json }},
+            error: {{ 'general.newsletter_form.error' | t | json  }},
+            submit: {{ 'general.newsletter_form.submit' | t | json  }},
+          },
+          copy_button: {
+            {% assign placeholder = '{content}' -%}
+            code: {{ 'general.copy_button.code' | t: content: placeholder | json  }},
+            error: {{ 'general.copy_button.error' | t | json  }},
+            success: {{ 'general.copy_button.success' | t | json  }},
+          },
+        },
+        accessibility: {
+          modal: {
+            close: {{ 'general.accessibility.close_modal' | t | json }},
+          },
+          previous: {{ 'general.accessibility.previous' | t | json }},
+          next: {{ 'general.accessibility.next' | t | json }},
+        },
+        onboarding: {
+          product: {
+            title: {{ 'onboarding.product.title' | t | json }},
+          },
+        },
+        collections: {
+          general: {
+            {% liquid
+              assign locale_string = 'collections.general.items_with_count'
+              assign placeholder = 'n' | prepend: '{' | append: '}'
+              assign count_t = '' | split: ''
+              assign count_t = locale_string | t: count: 0 | replace: '0', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 1 | replace: '1', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 9 | replace: '9', placeholder | concat: count_t
+              assign count_t = count_t | reverse | join: ' | '
+            -%}
+            items_with_count: {{ count_t | json }},
+          },
+        },
+        filters: {
+          range: {
+            from: {{ 'filters.range.from' | t | json }},
+            to: {{ 'filters.range.to' | t | json }},
+          },
+          results: {
+            empty: {{ 'filters.results.empty' | t | json }},
+            {% liquid
+              assign locale_string = 'filters.results.count'
+              assign placeholder = 'n' | prepend: '{' | append: '}'
+              assign count_t = '' | split: ''
+              assign count_t = locale_string | t: count: 0 | replace: '0', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 1 | replace: '1', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 9 | replace: '9', placeholder | concat: count_t
+              assign count_t = count_t | reverse | join: ' | '
+            -%}
+            count: {{ count_t | json }},
+          },
+          sorting: {
+            title: {{ 'filters.sorting.title' | t | json }},
+          },
+          toolbar: {
+            active_filters: {{ 'filters.toolbar.active_filters' | t | json }},
+            clear_all: {% liquid
+              assign locale_string = 'filters.toolbar.clear_all'
+              assign placeholder = 'n' | prepend: '{' | append: '}'
+              assign translation = '' | split: ''
+              assign translation = locale_string | t: count: 0 | replace: '0', placeholder | concat: translation
+              assign translation = locale_string | t: count: 1 | replace: '1', placeholder | concat: translation
+              assign translation = locale_string | t: count: 9 | replace: '9', placeholder | concat: translation
+              echo translation | reverse | join: ' | ' | json
+            -%},
+            hide: {{ 'filters.toolbar.hide' | t | json }},
+            {% assign placeholder = 'label' | prepend: '{' | append: '}' -%}
+            info: {{ 'filters.toolbar.info' | t | json }},
+            remove_active_value: {{ 'filters.toolbar.remove_active_value' | t: label: placeholder | json }},
+            reset: {{ 'filters.toolbar.reset' | t | json }},
+            show: {{ 'filters.toolbar.show' | t | json }},
+            submit: {% liquid
+              assign locale_string = 'filters.toolbar.submit'
+              assign placeholder = 'n' | prepend: '{' | append: '}'
+              assign translation = '' | split: ''
+              assign translation = locale_string | t: count: 0 | replace: '0', placeholder | concat: translation
+              assign translation = locale_string | t: count: 1 | replace: '1', placeholder | concat: translation
+              assign translation = locale_string | t: count: 9 | replace: '9', placeholder | concat: translation
+              echo translation | reverse | join: ' | ' | json
+            -%},
+          },
+        },
+        product: {
+          availability: {
+            in_stock: {{ 'products.product.in_stock' | t | json }},
+            sold_out: {{ 'products.product.sold_out' | t | json }},
+          },
+          stock_warning: {
+            {% liquid
+              assign qty_placeholder = '{q}'
+            %}
+            sold_out: {{ 'products.product.stock_warnings.sold_out' | t | json }},
+            low: {{ 'products.product.stock_warnings.low' | t: qty: qty_placeholder | json }},
+          },
+          form: {
+            add_selling_plan_to_cart: {{ 'products.selling_plans.add_to_cart' | t | json }},
+            {% liquid
+              assign name_placeholder = '{n}'
+              assign price_placeholder = '{p}'
+            %}
+            add_to_cart: {{ 'products.product.add_to_cart.default' | t | json }},
+            add_to_cart_name: {{ 'products.product.add_to_cart.name' | t: name: name_placeholder | json }},
+            add_to_cart_price: {{ 'products.product.add_to_cart.price' | t: price: price_placeholder | json }},
+            add_to_cart_sold_out: {{ 'products.product.add_to_cart.sold_out' | t | json }},
+            error_message: {{ 'products.product.alerts.error' | t | json }},
+            quantity_label: {{ 'products.product.quantity' | t | json }},
+            quantity_increase: {{ 'products.product.quantity_increase' | t | json }},
+            quantity_decrease: {{ 'products.product.quantity_decrease' | t | json }},
+            success_message: {{ 'products.product.alerts.success' | t | json }},
+            variant_label: {{ 'products.product.variant_label' | t | json }},
+            select_details: {{ 'products.product.select_details' | t | json }},
+          },
+          option: {
+            legend: {{ 'products.product.select_option' | t | json }},
+            toggle: {
+              {%- liquid
+                assign option_name = '{n}'
+                assign option_value = '{v}'
+              -%}
+              label: {{ 'products.product.toggle_option.label' | t: opt_name: option_name, opt_value: option_value | json }},
+              title: {{ 'products.product.toggle_option.title' | t | json }},
+            },
+          },
+          pricing: {
+            starting_at: {{ 'products.product.starting_at' | t | json }},
+            compare_at_price: {{ 'products.product.compare_at_price' | t | json }},
+            sale_price: {{ 'products.product.sale_price' | t | json }},
+            regular_price: {{ 'products.product.regular_price' | t | json }},
+            per_delivery_price: {{ 'products.selling_plans.per_delivery_price' | t | json }},
+            selling_plan_price: {{ 'products.selling_plans.selling_plan_price' | t | json }},
+          },
+          gift_card: {
+            recipient_name: {{ 'products.product.gift_card.recipient_name' | t | json }},
+            recipient_email: {{ 'products.product.gift_card.recipient_email' | t | json }},
+            message: {{ 'products.product.gift_card.message' | t | json }},
+            schedule_gift_card: {{ 'products.product.gift_card.schedule_gift_card' | t | json }},
+            send_on: {{ 'products.product.gift_card.send_on' | t | json }},
+            gift_card_date: {{ 'products.product.gift_card.gift_card_date' | t | json }}
+          },
+          selling_plans: {
+            free: {{ 'products.selling_plans.free' | t | json }},
+            one_time_purchase: {{ 'products.selling_plans.one_time_purchase' | t | json }},
+            payments: {% liquid
+              assign count_placeholder = '{n}'
+              assign price_placeholder = '{price}'
+              assign adjusted_price_placeholder = '{adjusted_price}'
+              assign translation = '' | split: ''
+              assign translation = 'products.selling_plans.payments' | t: count: 0, price: price_placeholder | replace: '0', count_placeholder | concat: translation
+              assign translation = 'products.selling_plans.payments' | t: count: 1, price: price_placeholder, adjusted_price: adjusted_price_placeholder | replace: '1', count_placeholder | concat: translation
+              assign translation = 'products.selling_plans.payments' | t: count: 9, price: price_placeholder, adjusted_price: adjusted_price_placeholder | replace: '9', count_placeholder | concat: translation
+              echo translation | reverse | join: ' | ' | json
+            %},
+            policy_link: {{ 'products.selling_plans.policy_link' | t | json }},
+            purchase_options: {{ 'products.selling_plans.purchase_options' | t | json }},
+            selling_plan_label: {{ 'products.selling_plans.selling_plan_label' | t | json }},
+          },
+          groups: {
+            {% liquid
+              assign price_placeholder = '{price}'
+            %}
+            legend: {{ 'products.groups.legend' | t | json }},
+            price: {
+              single: {{ 'products.groups.price.single' | t: price: price_placeholder | json }},
+              per_pair: {{ 'products.groups.price.per_pair' | t: price: price_placeholder | json }},
+            },
+            {% assign title_num = '{n}' %}
+            default_title: {{ 'products.groups.default_title' | t: num: title_num | json }},
+            pack_size: {% liquid
+              assign count_placeholder = '{n}'
+              assign translation = '' | split: ''
+              assign translation = 'products.groups.pack_sizes' | t: count: 1 | replace: '1', count_placeholder | concat: translation
+              assign translation = 'products.groups.pack_sizes' | t: count: 2 | replace: '2', count_placeholder | concat: translation
+              echo translation | reverse | join: ' | ' | json
+            %},
+            option_name: {{ 'products.groups.option_name' | t | json }},
+          },
+          size_calculator: {
+            {%- liquid
+              assign size_placholder = '{size}'
+            -%}
+            title: {{ 'products.size_calculator.title' | t | json }},
+            description: {{ 'products.size_calculator.description' | t | json  }},
+            result: {{ 'products.size_calculator.result_html' | t: size: size_placholder | json }},
+          },
+          quick_shop: {
+            {% liquid
+              assign name_placeholder = '{name}'
+            %}
+            button: {{ 'products.quick_shop.button' | t | json }},
+            close: {{ 'products.quick_shop.close' | t: name: name_placeholder | json }}
+          }
+        },
+        back_in_stock: {
+          heading: {{ 'back_in_stock.heading' | t | json }},
+          label: {{ 'back_in_stock.label' | t | json }},
+          input: {
+            placeholder: {{ 'back_in_stock.input.placeholder' | t | json }},
+          },
+          submit: {{ 'back_in_stock.submit' | t | json }},
+          feedback: {
+            {%- assign error = '{error}' -%}
+            success: {{ 'back_in_stock.feedback.success' | t | json }},
+            error: {{ 'back_in_stock.feedback.error' | t: error: error | json }},
+          },
+          call_to_action: {{ 'back_in_stock.call_to_action' | t | json }},
+        },
+        cart: {
+          general: {
+            title: {{ 'cart.general.title' | t | json }},
+            view_cart: {{ 'cart.general.view_cart' | t | json }},
+            empty: {{ 'cart.general.empty' | t | json }},
+            {% liquid
+              assign locale_string = 'cart.general.count'
+              assign placeholder = 'count' | prepend: '{' | append: '}'
+              assign count_t = '' | split: ''
+              assign count_t = locale_string | t: count: 0 | replace: '0', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 1 | replace: '1', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 9 | replace: '9', placeholder | concat: count_t
+              assign count_t = count_t | reverse | join: ' | '
+            -%}
+            count: {{ count_t | json }},
+            close: {{ 'cart.general.close' | t | json }},
+          },
+          form: {
+            checkout: {{ 'cart.general.checkout' | t | json }},
+            continue_shopping: {{ 'cart.general.continue_shopping' | t | json }},
+            note_label: {{ 'cart.general.note' | t | json }},
+            price_heading: {{ 'cart.label.price' | t | json }},
+            product_heading: {{ 'cart.label.product' | t | json }},
+            quantity_heading: {{ 'cart.label.quantity' | t | json }},
+            total_heading: {{ 'cart.label.total' | t | json }},
+            update: {{ 'cart.general.update' | t | json }},
+            details: {{ 'cart.general.details' | t | json }},
+          },
+          line_item: {
+            discount: {{ 'customer.order.discount' | t | json }},
+            discounted_line_price: {{ 'products.product.sale_price' | t | json }},
+            discounted_price: {{ 'products.product.sale_price' | t | json }},
+            final_line_price: {{ 'products.product.regular_price' | t | json }},
+            final_price: {{ 'products.product.regular_price' | t | json }},
+            original_line_price: {{ 'products.product.compare_at_price' | t | json }},
+            original_price: {{ 'products.product.compare_at_price' | t | json }},
+            quantity_label: {{ 'cart.label.quantity' | t | json }},
+            remove: {{ 'cart.general.remove' | t | json }},
+            {% assign placeholder = '{title}' -%}
+            remove_aria: {{ 'cart.general.remove_aria' | t: title: placeholder | json }},
+          },
+          totals: {
+            {% liquid
+              if shop.taxes_included and shop.shipping_policy.body != blank
+                assign shipping_taxes = 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url
+              elsif shop.taxes_included
+                assign shipping_taxes = 'cart.general.taxes_included_but_shipping_at_checkout' | t
+              elsif shop.shipping_policy.body != blank
+                assign shipping_taxes = 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url
+              else
+                assign shipping_taxes = 'cart.general.taxes_and_shipping_at_checkout' | t
+              endif
+            %}
+            shipping_taxes: {{ shipping_taxes | json }},
+            order_summary: {{ 'cart.general.order_summary' | t | json }},
+            savings: {{ 'cart.general.savings' | t | json }},
+            subtotal: {{ 'cart.general.subtotal' | t | json }},
+            shipping: {{ 'cart.general.shipping' | t | json }},
+            shipping_info: {{ 'cart.general.shipping_info' | t | json }},
+            free_shipping: {{ 'cart.general.free_shipping' | t | json }},
+            shipping_message: {{ 'cart.general.shipping_message' | t | json }},
+            tax: {{ 'cart.general.tax' | t | json }},
+            tax_message: {{ 'cart.general.tax_message' | t | json }},
+            discount_code: {{ 'cart.general.discount_code' | t | json }},
+            apply_discount: {{ 'cart.general.apply_discount' | t | json }},
+            discount_success: {{ 'cart.general.discount_success' | t | json }},
+            invalid_discount: {{ 'cart.general.invalid_discount' | t | json }},
+            {%- assign placeholder = '{code}' -%}
+            invalid_items_discount: {{ 'cart.general.invalid_items_discount' | t: code: placeholder | json }},
+            estimated_total: {{ 'cart.general.estimated_total' | t | json }},
+          }
+        },
+        customer: {
+          addresses: {
+            add: {{ 'customer.addresses.add' | t | json }},
+            add_new: {{ 'customer.addresses.add_new' | t | json }},
+            address1: {{ 'customer.addresses.address1' | t | json }},
+            address2: {{ 'customer.addresses.address2' | t | json }},
+            cancel: {{ 'customer.addresses.cancel' | t | json }},
+            delete: {{ 'customer.addresses.delete' | t | json }},
+            delete_confirm: {{ 'customer.addresses.delete_confirm' | t | json }},
+            city: {{ 'customer.addresses.city' | t | json }},
+            company: {{ 'customer.addresses.company' | t | json }},
+            country: {{ 'customer.addresses.country' | t | json }},
+            edit_address: {{ 'customer.addresses.edit_address' | t | json }},
+            first_name: {{ 'customer.addresses.first_name' | t | json }},
+            last_name: {{ 'customer.addresses.last_name' | t | json }},
+            phone: {{ 'customer.addresses.phone' | t | json }},
+            province: {{ 'customer.addresses.province' | t | json }},
+            set_default: {{ 'customer.addresses.set_default' | t | json }},
+            update: {{ 'customer.addresses.update' | t | json }},
+            zip: {{ 'customer.addresses.zip' | t | json }},
+          },
+        },
+        search: {
+          general: {
+            {% liquid
+              assign locale_string = 'general.search.results_with_count'
+              assign placeholder = 'n' | prepend: '{' | append: '}'
+              assign terms = 'terms' | prepend: '{' | append: '}'
+              assign count_t = '' | split: ''
+              assign count_t = locale_string | t: count: 0, terms: terms | replace: '0', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 1, terms: terms | replace: '1', placeholder | concat: count_t
+              assign count_t = locale_string | t: count: 9, terms: terms | replace: '9', placeholder | concat: count_t
+              assign count_t = count_t | reverse | join: ' | '
+            -%}
+            results_with_count: {{ count_t | json }},
+          },
+          {% liquid
+            assign count_placeholder = '{n}'
+            assign terms_placeholder = '{terms}'
+            assign types_placeholder = '{types}'
+          -%}
+          clear: {{ 'general.search.clear' | t | json }},
+          close: {{ 'general.search.close' | t | json }},
+          input_aria: {{ 'general.search.input_aria' | t | json }},
+          label: {{ 'general.search.placeholder' | t | json }},
+          loading: {{ 'general.search.loading' | t | json }},
+          no_result: {{ 'general.search.no_result' | t: terms: terms_placeholder | json }},
+          placeholder: {{ 'general.search.placeholder' | t | json }},
+          see_all: {{ 'general.search.see_all' | t: terms: terms_placeholder | json }},
+          clear_recent: {{ 'general.search.clear_recent' | t | json }},
+          {% liquid
+            assign key = 'general.search.status'
+            assign translation = '' | split: ''
+            assign translation = key | t: count: 0, types: types_placeholder | replace: '0', count_placeholder | concat: translation
+            assign translation = key | t: count: 1, types: types_placeholder | replace: '1', count_placeholder | concat: translation
+            assign translation = key | t: count: 2, types: types_placeholder | replace: '2', count_placeholder | concat: translation
+            assign translation = translation | reverse | join: ' | '
+          %}
+          status: {{ translation | json }},
+          status_labels: {
+            {% liquid
+              assign key = 'general.search.articles_count'
+              assign translation = '' | split: ''
+              assign translation = key | t: count: 0 | replace: '0', count_placeholder | concat: translation
+              assign translation = key | t: count: 1 | replace: '1', count_placeholder | concat: translation
+              assign translation = key | t: count: 2 | replace: '2', count_placeholder | concat: translation
+              assign translation = translation | reverse | join: ' | '
+            %}
+            articles: {{ translation | json }},
+            {% liquid
+              assign key = 'general.search.collections_count'
+              assign translation = '' | split: ''
+              assign translation = key | t: count: 0 | replace: '0', count_placeholder | concat: translation
+              assign translation = key | t: count: 1 | replace: '1', count_placeholder | concat: translation
+              assign translation = key | t: count: 2 | replace: '2', count_placeholder | concat: translation
+              assign translation = translation | reverse | join: ' | '
+            %}
+            collections: {{ translation | json }},
+            {% liquid
+              assign key = 'general.search.pages_count'
+              assign translation = '' | split: ''
+              assign translation = key | t: count: 0 | replace: '0', count_placeholder | concat: translation
+              assign translation = key | t: count: 1 | replace: '1', count_placeholder | concat: translation
+              assign translation = key | t: count: 2 | replace: '2', count_placeholder | concat: translation
+              assign translation = translation | reverse | join: ' | '
+            %}
+            pages: {{ translation | json }},
+            {% liquid
+              assign key = 'general.search.products_count'
+              assign translation = '' | split: ''
+              assign translation = key | t: count: 0 | replace: '0', count_placeholder | concat: translation
+              assign translation = key | t: count: 1 | replace: '1', count_placeholder | concat: translation
+              assign translation = key | t: count: 2 | replace: '2', count_placeholder | concat: translation
+              assign translation = translation | reverse | join: ' | '
+            %}
+            products: {{ translation | json }},
+            {% liquid
+              assign key = 'general.search.suggestions_count'
+              assign translation = '' | split: ''
+              assign translation = key | t: count: 0 | replace: '0', count_placeholder | concat: translation
+              assign translation = key | t: count: 1 | replace: '1', count_placeholder | concat: translation
+              assign translation = key | t: count: 2 | replace: '2', count_placeholder | concat: translation
+              assign translation = translation | reverse | join: ' | '
+            %}
+            queries: {{ translation | json }},
+          },
+          submit: {{ 'general.search.submit' | t | json }},
+          titles: {
+            queries: {{ 'general.search.suggestions' | t | json }},
+            queries_popular: {{ 'general.search.suggestions_popular' | t | json }},
+            queries_recent: {{ 'general.search.suggestions_recent' | t | json }},
+          },
+        },
+        layout: {
+          header: {
+            {% assign placeholder = '{shop_name}' -%}
+            logo_title: {{ 'layout.header.logo_title' | t: shop_name: placeholder | json }},
+          },
+          navigation: {
+            close: {{ 'layout.navigation.close' | t | json }},
+            menu: {{ 'layout.navigation.menu' | t | json }},
+            search: {{ 'layout.navigation.search' | t | json }},
+            login: {{ 'layout.navigation.login' | t | json }},
+            account: {{ 'layout.navigation.account' | t | json }},
+            help: {{ 'layout.navigation.help' | t | json }},
+            sign_in: {{ 'layout.navigation.sign_in' | t | json }},
+            or: {{ 'layout.navigation.or' | t | json }},
+            register: {{ 'layout.navigation.register' | t | json }},
+            view_account: {{  'layout.navigation.view_account' | t | json }},
+          },
+        },
+        featured_campaign_blocks: {
+          title: {{ 'featured_campaign_blocks.title' | t | json }},
+        },
+        featured_mini_blocks: {
+          title: {{ 'featured_mini_blocks.title' | t | json }},
+        },
+        featured_blocks: {
+          title: {{ 'featured_blocks.title' | t | json }},
+        },
+        sale_blocks: {
+          title: {{ 'sale_blocks.title' | t | json }},
+        },
+        gift_wrap: {
+          edit_button: {{ 'gift_wrap.edit_button' | t | json }},
+          button: {{ 'gift_wrap.button' | t | json }},
+          free: {{ 'gift_wrap.free' | t | json }},
+          modal: {
+            title: {{ 'gift_wrap.modal.title' | t | json }},
+            message_label: {{ 'gift_wrap.modal.message_label' | t | json }},
+            textarea_label: {{ 'gift_wrap.modal.textarea_label' | t | json }},
+            submit: {{ 'gift_wrap.modal.submit' | t | json }},
+            cancel: {{ 'gift_wrap.modal.cancel' | t | json }},
+            missing_message_error: {{ 'gift_wrap.modal.missing_message_error' | t | json }},
+          },
+        },
+        reviews: {
+          anchor: {{ 'reviews.anchor' | t | json }},
+          reviews: {{ 'reviews.reviews' | t | json }},
+          rating: {{ 'reviews.rating' | t | json }},
+          fit: {
+            summary: {{ 'reviews.fit.summary' | t | json }},
+            small: {{ 'reviews.fit.small' | t | json }},
+            true: {{ 'reviews.fit.true' | t | json }},
+            large: {{ 'reviews.fit.large' | t | json }},
+          },
+        },
+        video: {
+          play: {{ 'video.play' | t | json }},
+          pause: {{ 'video.pause' | t | json }},
+        },
+        slider: {
+          play: {{ 'slider.play' | t | json }},
+          pause: {{ 'slider.pause' | t | json }},
+        },
+      },
+    };
+
+    // 4. Cart Object
+    theme.cart = {{ cart | json }};
+
+    // 5. Customer
+    theme.customer =
+      {%- if customer -%}
+        {
+          email: {{ customer.email | json }},
+          first_name: {{ customer.first_name | json }},
+          accepts_marketing: {{ customer.accepts_marketing | json }},
+          addresses: {{ customer.addresses | json }},
+          addresses_count: {{ customer.addresses_count | json }},
+          default_address: {{ customer.default_address | json }},
+          email: {{ customer.email | json }},
+          first_name: {{ customer.first_name | json }},
+          has_account: {{ customer.has_account | json }},
+          id: {{ customer.id | json }},
+          last_name: {{ customer.last_name | json }},
+          name: {{ customer.name | json }},
+          orders_count: {{ customer.orders_count | json }},
+          tags: {{ customer.tags | json }},
+          total_spent: {{ customer.total_spent | json }}
+        }
+      {%- else -%}
+        null
+      {%- endif -%};
+
+  // 6. Current Object
+  theme.product = {% liquid
+    if product
+      render 'product--json' with product as product
+    else
+      echo nil | json
+    endif
+  %};
+  {% if collection.handle == 'all' and collection.id == nil %}
+    theme.collection = {
+      description: {{ collection.description | json }},
+      handle: {{ collection.handle | json }},
+      id: {{ collection.id | json }},
+      image: {{ collection.image | json }},
+      title: {{ collection.title | json }},
+    };
+  {% else %}
+    theme.collection = {{ collection | json }};
+  {% endif %}
+  {% if request.page_type == 'collection' %}
+    theme.collection.default_sort_by = "";
+    theme.collection.is_mega_collection = {{ collection.metafields.custom.fredhopper_mega_collection.value | json }};
+    theme.collection.sort_options = [
+      ["", "Relevance"],
+      ["price-desc", "Price (High to Low)"],
+      ["price-asc", "Price (Low to High)"],
+      ["facet_reviews-desc", "Average Rating"],
+    ];
+  {% endif %}
+  {%- if search -%}
+    theme.search = {
+      default_sort_by: "",
+      sort_options: [
+        ["", "Relevance"],
+        ["price-desc", "Price (High to Low)"],
+        ["price-asc", "Price (Low to High)"],
+        ["facet_reviews-desc", "Average Rating"],
+      ],
+      terms: {{ search.terms | json }},
+      types: ["product"],
+    };
+  {%- else -%}
+    theme.search = null;
+  {%- endif -%}
+  theme.page = {{ page | json }};
+
+    // 7. Routes
+    theme.routes = {
+      rootUrl: {{ routes.root_url | json }},
+      accountUrl: {{ routes.account_url | json }},
+      accountLoginUrl: {{ routes.account_login_url | json }},
+      accountLogoutUrl: {{ routes.account_logout_url | json }},
+      accountRegisterUrl: {{ routes.account_register_url | json }},
+      accountAddressesUrl: {{ routes.account_addresses_url | json }},
+      collectionsUrl: {{ routes.collections_url | json }},
+      allProductsCollectionUrl: {{ routes.all_products_collection_url | json }},
+      searchUrl: {{ routes.search_url | json }},
+      cartUrl: {{ routes.cart_url | json }},
+      cartAddUrl: {{ routes.cart_add_url | json }},
+      cartChangeUrl: {{ routes.cart_change_url | json }},
+      cartClearUrl: {{ routes.cart_clear_url | json }},
+      productRecommendationsUrl: {{ routes.product_recommendations_url | json }},
+      productsUrl: {{ routes.product_recommendations_url | replace_first: 'recommendations/', '' | json }},
+    };
+
+    // 8. Settings
+    theme.settings = {
+      continueShoppingUrl: {{ settings.continue_shopping_url | json }},
+      maxQuantity: {{ settings.quantity_max | json }},
+      productImageSize: {{ settings.product_tile_image_max | append: 'x' | json }},
+      productsLimit: {{ settings.products_page_size | json }},
+      searchResultsLimit: {{ settings.results_page_size | json }},
+      quantityStep: {{ settings.quantity_step | json }},
+      responsiveSizes: {{ settings.responsive_sizes | remove: ' ' | split: ',' | json }},
+      klaviyoId: {{ settings.klaviyo_id | json }},
+      dyApiKey: {{ settings.dy_api_key | json }},
+      product: {
+        lowStockThreshold: {{ settings.product_low_stock_threshold | json }},
+      },
+      cart: {
+        free_shipping_amount: {{ settings.free_shipping_amount | times: 100 | json }},
+        shipping_info: {{ settings.cart_shipping_info | json }},
+        enableDiscountCode: {{ settings.enable_discount_code | json }},
+      },
+      giftMessage: {
+        enabled: {{ settings.enable_gift_message | json }},
+        info: {{ settings.gift_message_info | json }},
+      },
+      giftBox: {
+        info: {{ settings.gift_box_info | json }},
+        product: {% liquid
+          assign gift_box_product = all_products[settings.gift_box_product]
+          if gift_box_product != empty
+            render 'product--json' with gift_box_product as product
+          else
+            echo nil | json
+          endif
+        %},
+      },
+      gwp:
+      {%- if settings.enable_free_gift -%}
+        {
+          product: {{ settings.gwp_product.handle | json }},
+          variant: {% liquid
+            assign gwp_variant = settings.gwp_product.first_available_variant
+            unless settings.gwp_variant == blank
+            assign gwp_variant_id = settings.gwp_variant | times: 1
+            assign gwp_variant = settings.gwp_product.variants | where: 'id', gwp_variant_id | where: 'available' | first
+            endunless
+            echo gwp_variant.id | json
+          %},
+          message: {{ settings.free_gwp_messaging | json }},
+          threshold: {{ settings.gwp_cart_threshold | times: 100 }},
+        }
+      {%- else -%}
+        null
+      {%- endif -%},
+    };
+
+    // 9. Localization
+    theme.localization = {
+      country: {
+        currency: {
+          iso_code: {{ localization.country.currency.iso_code | json }},
+          name: {{ localization.country.currency.name | json }},
+          symbol: {{ localization.country.currency.symbol | json }},
+        },
+        iso_code: {{ localization.country.iso_code | json }},
+        name: {{ localization.country.name | json }},
+        unit_system: {{ localization.country.unit_system | json }},
+      },
+      language: {
+        endonym_name: {{ localization.language.endonym_name | json }},
+        iso_code: {{ localization.language.iso_code | json }},
+        name: {{ localization.language.name | json }},
+        primary: {{ localization.language.primary | json }},
+        root_url: {{ localization.language.root_url | json }},
+      },
+    };
+
+    // 10. Request
+    theme.request = {
+      host: {{ request.host | json }},
+      design_mode: {{ request.design_mode | json }},
+    };
+
+    theme.fhConfig = {
+      catalogTree: {{ shop.metafields.custom_fields.attraqt.value | json }},
+      collection: {
+        abTesting: {{ collection.metafields.custom.fredhopper_a_b_testing.value | json }},
+        collectionId: {{ collection.metafields.custom_fields.collection_id.value | json }},
+        collectionPath: {{ collection.metafields.custom.fredhopper_collection_path.value | json }},
+      }
+    };
+
+    theme.apiConfig = {
+      auth: {{ shop.metafields.custom_fields.api_authorization_key | json }},
+    };
+  })(window.theme = window.theme || {});
+</script>

@@ -1,4 +1,10 @@
 {
+  "scripts/instances/CollectionPage.vue": {
+    "file": "CollectionPage.js",
+    "name": "CollectionPage",
+    "src": "scripts/instances/CollectionPage.vue",
+    "isEntry": true
+  },
   "scripts/instances/HeaderApp.vue": {
     "file": "HeaderApp.js",
     "name": "HeaderApp",
