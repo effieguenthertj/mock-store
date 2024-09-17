@@ -10,24 +10,39 @@ export default {
   setup() {
     const collectionData = ref(null);
     const products = ref(null);
+    let collectionHandle = ""
+    if (window.theme.collection) {
+      collectionHandle = window.theme.collection.handle;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    console.log(params);
+    const productUrl = `/collections/${collectionHandle}/products.json?${params.toString()}`
+
+    const fetchData = () => {
+
+      fetch(productUrl)
+        .then(response => response.json())
+        .then(data => {
+          products.value = data.products;
+          console.log("products fetched", products.value);
+        })
+        .catch(error => {
+          console.error('Error fetching collection products:', error);
+      });
+      fetch(`/collections/${collectionHandle}.json`)
+        .then(response => response.json())
+        .then(data => {
+          collectionData.value = data;
+          console.log("collection data", collectionData.value);
+        })
+        .catch(error => {
+          console.error('Error fetching collection:', error);
+      });
+    }
 
     onMounted(() => {
-      if (window.theme && window.theme.collection) {
-        collectionData.value = window.theme.collection;
-        console.log("collection", collectionData.value);
-
-        fetch(`/collections/${collectionData.value.handle}/products.json`)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data.products);
-            products.value = data.products;
-          })
-          .catch(error => {
-            console.error('Error fetching collection products:', error);
-          });
-      } else {
-        console.warn("window.theme.collection is not available");
-      }
+        fetchData();
     });
 
     return {

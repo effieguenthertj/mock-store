@@ -566,6 +566,7 @@
   {% else %}
     theme.collection = {{ collection | json }};
   {% endif %}
+
   {% if request.page_type == 'collection' %}
     theme.collection.default_sort_by = "";
     theme.collection.is_mega_collection = {{ collection.metafields.custom.fredhopper_mega_collection.value | json }};

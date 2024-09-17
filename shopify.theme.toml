@@ -1,0 +1,3 @@
+[environments.development]
+store = "effie-test-store.myshopify.com"
+theme = "165145608226"
