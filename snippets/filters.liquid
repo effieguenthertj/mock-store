@@ -1,49 +1,57 @@
-<form @submit="fetchData" class="py-2">
-  <div class="flex">
+<form id="filterForm" class="py-2">
+  <div class="flex flex-col">
     {%- for filter in collection.filters -%}
-      <div class="p-2 group relative">
-        <div class="bg-azure rounded p-2">
+      <div class="py-8 {% unless forloop.last %} border-b {% endunless %}">
+        <div class="px-8 mb-4 text-lg">
           <label class="">{{ filter.label }}</label>
           {%- if filter.active_values.size > 0 -%}
             <span>({{ filter.active_values.size }})</span>
           {%- endif -%}
         </div>
 
-        <div class="absolute left-0 mt-2 min-w-[14em] p-6 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+        <div class="ps-10 text-gray-600">
           {%- case filter.type -%}
             {%- when 'boolean' -%}
               <ul>
                   <li>
-                    <label for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}">
+                    <label 
+                      for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}"
+                      class="{% if filter.true_value.count == 0 and filter.true_value.active == false %}text-gray-300{% else %}text-current{% endif %}"
+                    >
                     <input type="checkbox"
                       name="{{ filter.param_name }}"
                       value="{{ filter.true_value.value }}"
                       id="Filter-{{ filter.param_name }}"
+                      class="{% if filter.true_value.count == 0 and filter.true_value.active == false -%}border-gray-300{%- endif -%}"
                       {% if filter.true_value.active -%}checked{%- endif %}
                       {% if filter.true_value.count == 0 and filter.true_value.active == false -%}disabled{%- endif -%}
                     >{{ filter.true_value.label }}</label>
                   </li>
                   <li>
-                    <label for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}">
+                    <label 
+                      for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}"
+                      class="{% if filter.false_value.count == 0 and filter.false_value.active == false %}text-gray-300{% endif %}"
+                    >
                     <input type="checkbox"
                       name="{{ filter.param_name }}"
                       value="{{ filter.false_value.value }}"
                       id="Filter-{{ filter.param_name }}"
+                      class="{% if filter.false_value.count == 0 and filter.false_value.active == false -%}border-gray-300{%- endif %}"
                       {% if filter.false_value.active -%}checked{%- endif %}
                       {% if filter.false_value.count == 0 and filter.false_value.active == false -%}disabled{%- endif %}
                     >{{ filter.false_value.label }}</label>
                   </li>
               </ul>
-
-              <div class="mt-4">
-                <button type="submit" class="py-1 px-4 bg-azure rounded text-center">Apply</button>
-              </div>
             {%- when 'list' -%}
               <ul>
                 {%- for filter_value in filter.values -%}
                   <li>
-                    <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                    <label                       
+                      class="{% if filter_value.count == 0 and filter_value.active == false %}text-gray-300{% endif %}"
+                      for="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                    >
                     <input type="checkbox"
+                      class="peer {% if filter_value.count == 0 and filter_value.active == false -%}border-gray-300{%- endif %}"
                       name="{{ filter_value.param_name }}"
                       value="{{ filter_value.value }}"
                       id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
@@ -92,10 +100,6 @@
                   </li>
                 {%- endfor -%}
               </ul>
-
-              <div class="mt-4">
-                <button type="submit" class="py-1 px-4 bg-azure rounded text-center">Apply</button>
-              </div>
             {%- when 'price_range' -%}
               <div class="filter-group-display__price-range">
                 <div class="filter-group-display__price-range-from">
@@ -131,48 +135,15 @@
                   <label for="Filter-{{ filter.max_value.param_name }}">To</label>
                 </div>
               </div>
-
-              <div class="filter-group-display__submit mt-4">
-                <button type="submit" class="py-1 px-4 bg-azure rounded text-center">Apply</button>
-              </div>
-          {%- endcase -%}
+          {%- endcase -%}          
         </div>
       </div>
     {%- endfor -%}
   </div>
-
-  {% assign active_filters = false %}
-
-  <div class="p-2 flex items-center">
-    {%- for filter in collection.filters -%}
-      {%- if filter.type == "price_range" -%}
-        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
-          {% assign active_filters = true %}
-          <p class="py-2 px-4 rounded-full mb-2 border-2 mr-2">
-            <a href="{{ filter.url_to_remove }}">
-              {%- assign min_value = filter.min_value.value | default: 0 -%}
-              {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
-              {{ min_value | money }} - {{ max_value | money }} <span class="ml-2">x</span>
-            </a>
-          </p>
-        {%- endif -%}
-      {%- else -%}
-        {% if filter.active_values != blank %}
-          {% assign active_filters = true %}
-        {% endif %}
-        {%- for filter_value in filter.active_values -%}
-          <p class="py-2 px-4 rounded-full mb-2 border-2 mr-2">
-            <a href="{{ filter_value.url_to_remove }}" class="">
-              {{ filter_value.label }} <span class="ml-2">x</span>
-            </a>
-          </p>
-        {%- endfor -%}
-      {%- endif -%}
-    {%- endfor -%}
-    {% if active_filters %}
-      <p class="mb-2">
-        <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="bg-sandyBrown text-white py-3 px-6 rounded-full">Clear all</a>
-      </p>
-    {% endif %}
-  </div>
 </form>
+
+<script>
+  document.getElementById("filterForm").onchange = function() {
+    this.submit();
+  };  
+</script>

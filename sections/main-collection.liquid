@@ -15,28 +15,36 @@
 <script>console.log({{ collection.handle | json }})</script>
 
 {% comment %} <vue-app data-vue="CollectionPage"> {% endcomment %}
-  
-  <div class="py-8 px-20">
-    {% render 'filters' %}
-    <h2 class="text-3xl my-4 ms-4">{{ collection.title }}</h2>
-    <div class="grid grid-cols-8">
-      {% for product in collection.products %}
-      <div class="col-span-2 my-4 mx-6">
-        <a href="/products/{{product.handle}}">
-          <img 
-            src="{{ product.featured_image | image_url }}"
-            height="100%" 
-            width="100%" 
-            class="w-100" 
-          />
-          <p class="text-sm text-cafeNoir mt-4 pe-4">{{ product.title }}</p>
-          <p class="text-md text-cafeNoir font-semibold">
-            {{ product.price  | money}}
-          </p>
-        </a>
-      </div>
-    {% endfor %}
+  <h2 class="text-6xl pt-24 pb-14 ms-12">{{ collection.title }}</h2>
+  <div class="border-b border-b border-t py-3 ps-10">
+    {% render 'active-filters' %}
+  </div>
+
+  <div class="grid grid-cols-8">
+    <div class="col-span-2 border-r">
+      {% render 'filters' %}
     </div>
-    {% comment %} <filters /> {% endcomment %}
+
+    <div class="p-10 col-span-6">
+      <div class="grid grid-cols-8">
+        {% for product in collection.products %}
+          <div class="col-span-2 my-4 mx-6">
+            <a href="/products/{{product.handle}}">
+              <img 
+                src="{{ product.featured_image | image_url }}"
+                height="100%" 
+                width="100%" 
+                class="w-100" 
+              />
+              <p class="text-sm text-cafeNoir mt-4 pe-4">{{ product.title }}</p>
+              <p class="text-md text-cafeNoir font-semibold">
+                {{ product.price  | money}}
+              </p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      {% comment %} <filters /> {% endcomment %}
+    </div>
   </div>
 {% comment %} </vue-app> {% endcomment %}
